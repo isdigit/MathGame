@@ -1,8 +1,6 @@
 #import modules
 from random import randint
-from playsound import playsound
-from pathlib import Path
-import threading
+
 
 #Initial game parameters
 max_rounds = 10
@@ -71,7 +69,7 @@ def savescore(file_name,score_list):
 def readscore(file_name):
 	new_list=[]
 	try:
-	with open(file_name,"r") as score_file:
+		with open(file_name,"r") as score_file:
 			for line in score_file:
 				line=line.strip()
 				player_score=line.split(",")
@@ -217,8 +215,6 @@ def PlayGame(start_round,max_rounds,low_bound,high_bound,sudden_death,score_mult
 		problem_list.add(problem)
 
 	for problem in problem_list:
-		#playsound(coin_sound,True)
-		threading.Thread(target=playsound, args=(coin_sound,), daemon=True).start()
 		current_round+=1
 		print(msg_score.format(current_round,score))
 		print(msg_multiply.format(problem[0],problem[1]))
