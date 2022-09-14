@@ -9,8 +9,6 @@ high_bound = 12
 sudden_death = False
 score_multiplier = 0
 score_file_name = "scores.scs"
-sound_dir = Path(__file__).parent
-coin_sound = sound_dir / 'CoinFalling.mp3'
 
 #String variables
 ScoreMultiplier = lambda x : f"Current Score Multiplier: ({x})"#{}score_multiplier
