@@ -135,7 +135,7 @@ def EnterInt(msg):
 	return y
 	
 #Function that generates a unique set of tuples with two integers each within low_bound and high_bound values
-def GenerateOperands(low_bound,high_bound):
+def GenerateOperands(low_bound,high_bound,max_rounds):
 	problem = ()
 	problem_list = set()
 	
@@ -237,7 +237,7 @@ def PlayGame(start_round,game_type_options,game_type,max_rounds,low_bound,high_b
 	current_round = 0
 	
 	#Prevent duplicates by storing a tuples with 2 operators each in a set. Max rounds is limited to (high_bound-lowbound)**2 to prevent infintite looping.
-	problem_list = GenerateOperands(low_bound,high_bound)
+	problem_list = GenerateOperands(low_bound,high_bound,max_rounds)
 
 	for problem in problem_list:
 		if game_type == "Mixed Math":
@@ -290,43 +290,46 @@ def RepeatGame():
 		play_again = False	
 	return play_again
 
+def main():
+	#Initial game parameters
+	max_rounds = 10
+	low_bound = 2
+	high_bound = 12
+	game_type = game_type_options[0]
+	sudden_death = False
+	score_multiplier = 0
+	global score_list
+	
+	#Main game loop
+	print(msg_welcome)
 
-#Initial game parameters
-max_rounds = 10
-low_bound = 2
-high_bound = 12
+	while True:
+		#Reset variables
+		score = 0
+		start_round = 1
+		play_again = True
+
+		#Load main menu, display options, and get user input
+		game_type,max_rounds,low_bound,high_bound,sudden_death,score_multiplier = MainMenu(game_type_options,game_type,max_rounds,low_bound,high_bound,sudden_death)
+
+		while play_again == True:
+			#Play the game
+			score = PlayGame(start_round,game_type_options,game_type,max_rounds,low_bound,high_bound,sudden_death,score_multiplier)
+
+			#Check for new score and if true update the score list and then shows it
+			if (CheckScoreList(score_list,score)):
+				score_list = UpdateScoreList(score_list,score)
+				print(blank_line)
+				ShowScoreList(score_list)
+				print(blank_line)
+
+			#Prompt for repeat game
+			play_again = RepeatGame()
+
+#Global variables
 game_type_options = ("Mixed Math","Addition","Subtraction","Multiplication")
-game_type = game_type_options[0]
 end_game_keywords = ["q","quit"]
-sudden_death = False
-score_multiplier = 0
 score_file_name = "scores.scs"
-
-#Main game loop
-print(msg_welcome)
-
 score_list = readscore(score_file_name)
 
-while 1 == 1:
-	#Reset variables
-	score = 0
-	start_round = 1
-	current_round = start_round
-	play_again = True
-
-	#Load main menu, display options, and get user input
-	game_type,max_rounds,low_bound,high_bound,sudden_death,score_multiplier = MainMenu(game_type_options,game_type,max_rounds,low_bound,high_bound,sudden_death)
-
-	while play_again == True:
-		#Play the game
-		score = PlayGame(start_round,game_type_options,game_type,max_rounds,low_bound,high_bound,sudden_death,score_multiplier)
-
-		#Check for new score and if true update the score list and then shows it
-		if (CheckScoreList(score_list,score)):
-			score_list = UpdateScoreList(score_list,score)
-			print(blank_line)
-			ShowScoreList(score_list)
-			print(blank_line)
-
-		#Prompt for repeat game
-		play_again = RepeatGame()
+main()
